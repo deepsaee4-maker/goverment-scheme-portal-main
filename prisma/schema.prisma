@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Scheme {
+  id                 Int      @id @default(autoincrement())
+  title              String
+  shortDescription   String
+  fullDescription    String
+  eligibility        String
+  benefits           String
+  documents          String
+  applicationProcess String
+  views              Int      @default(0)
+  createdAt          DateTime @default(now())
+
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  @@index([categoryId])
+  @@index([title])
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  icon      String
+  createdAt DateTime @default(now())
+
+  schemes Scheme[]
+}
